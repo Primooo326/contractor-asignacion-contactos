@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import "./variables.scss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* Asegúrate de que esto esté después de las directivas de Tailwind */
+:root {
+  --background: $background;
+  --foreground: $foreground;
+}
+
+body {
+  font-family: "Montserrat", serif;
+  font-style: normal;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  color: var(--foreground);
+  background: var(--background);
+}
+
+body .scrollbar-custom {
+  scrollbar-width: thin !important;
+  scrollbar-color: #b9b9b9 transparent !important;
+}
+
+body .scrollbar-custom::-webkit-scrollbar {
+  width: 3px !important;
+  height: 3px !important;
+}
+
+body .scrollbar-custom::-webkit-scrollbar-track {
+  width: 3px !important;
+  height: 3px !important;
+  background-color: rgb(220, 220, 220) !important;
+  border-radius: 25px !important;
+}
+
+body .scrollbar-custom::-webkit-scrollbar-thumb {
+  width: 3px !important;
+  height: 3px !important;
+  background: transparent !important;
+  border-radius: 25px !important;
+}
+
+* {
+  font-family: "Montserrat", serif;
+  font-style: normal;
+}
