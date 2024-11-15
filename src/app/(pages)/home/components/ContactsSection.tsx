@@ -83,11 +83,11 @@ export default function ContactsSection() {
 
 
   return (
-    <div className="drawer2">
+    <div className="drawer2 border-r border-base-300">
       <div className="p-4 space-y-6 h-full overflow-hidden mb-6">
         <div className="flex justify-between items-center">
           <label className="input input-bordered input-sm flex items-center gap-2 w-full">
-            <DynamicIcon icon="fa-solid:search" className=" text-gray-500" />
+            <DynamicIcon icon="fa-solid:search" className="" />
             <input
               type="text"
               className="grow"
@@ -96,7 +96,7 @@ export default function ContactsSection() {
             />
           </label>
         </div>
-        <h1 className="text-center text-sm text-gray-500 mt-4">
+        <h1 className="text-center text-sm mt-4">
           {loading ? "Buscando..." : `${contactsList.length} contactos encontrados`}
         </h1>
         <div className="space-y-2 overflow-y-auto scrollbar-custom pb-10 listContactsContainer">
