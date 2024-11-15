@@ -4,3 +4,15 @@
     width: var(--section5);
     height: 100dvh;
 }
+
+.pageContainer {
+    width: 100dvw;
+    height: 100dvh;
+
+    display: grid;
+    grid-template-rows: var(--section10) auto;
+
+    .contactsSection {
+        height: 100%;
+    }
+}

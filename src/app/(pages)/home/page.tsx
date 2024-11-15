@@ -3,7 +3,7 @@ import ContactsSection from './components/ContactsSection';
 import AsociadoSection from './components/AsociadoSection';
 export default function page() {
     return (
-        <div className=' w-full flex'>
+        <div className='pageContainer w-full flex flex-col'>
             <ContactsSection />
             <AsociadoSection />
         </div>

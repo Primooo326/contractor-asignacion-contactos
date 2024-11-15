@@ -26,6 +26,17 @@ export default function ContactsSection() {
     }
 
   };
+  const handleSelectContact = (contact: IConversation) => {
+    const contactFound = contactsSelected.findIndex((contactSelected) => contactSelected.id === contact.id);
+
+    if (contactFound !== -1) {
+      const newContactsSelected = contactsSelected.filter((c, i) => i !== contactFound);
+      setContactsSelected(newContactsSelected);
+    } else {
+      const newContactsSelected = [...contactsSelected, contact];
+      setContactsSelected(newContactsSelected);
+    }
+  }
   const decodeToken = (token: any) => {
     const payload = token.split('.')[1];
     return JSON.parse(atob(payload));
@@ -83,9 +94,9 @@ export default function ContactsSection() {
 
 
   return (
-    <div className="drawer2 border-r border-base-300">
-      <div className="p-4 space-y-6 h-full overflow-hidden mb-6">
-        <div className="flex justify-between items-center">
+    <div className="contactsSection w-full border-r border-base-300">
+      <div className="p-4 space-y-6 h-full overflow-hidden mb-6 ">
+        <div className="flex justify-between items-center w-[300px] space-x-4">
           <label className="input input-bordered input-sm flex items-center gap-2 w-full">
             <DynamicIcon icon="fa-solid:search" className="" />
             <input
@@ -95,12 +106,39 @@ export default function ContactsSection() {
               onKeyUp={handleEnterKey}
             />
           </label>
+          {
+            contactsSelected.length !== 0 &&
+            <button className='btn btn-warning btn-sm ' onClick={() => setContactsSelected([])}>
+              Eliminar todos
+              {/* <FaXmark /> */}
+            </button>
+          }
         </div>
-        <h1 className="text-center text-sm mt-4">
+        <h1 className="text-sm">
           {loading ? "Buscando..." : `${contactsList.length} contactos encontrados`}
         </h1>
         <div className="space-y-2 overflow-y-auto scrollbar-custom pb-10 listContactsContainer">
-          {contactsList.map((contact, index) => (
+          <div className='bodyChat overflow-y-auto scrollbar-custom p-4'>
+
+            <div className='flex flex-wrap gap-4 w-full'>
+
+              {contactsSelected.map((contact, index) => (
+                <div key={index} className='p-1 pe-4 rounded-full w-fit border flex gap-2 hover:scale-105 transition-all duration-300 hover:bg-gray-100'>
+                  <img src={`https://ui-avatars.com/api/?name=${contact!.contactName?.replaceAll(" ", "+")}&background=random`} alt="contractor" className='rounded-full' style={{ width: '40px' }} />
+                  <div >
+                    <h1 className='font-bold text-sm'>{contact!.contactName}</h1>
+                    <p className='text-sm font-light'>
+                      {contact!.email}
+                    </p>
+                  </div>
+                  <button onClick={() => handleSelectContact(contact)}>
+                    {/* <FaXmark /> */}
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* {contactsList.map((contact, index) => (
             <div
               key={index}
               className={`flex justify-between items-center w-full hover:bg-gray-100 p-4 rounded-lg ${contactsSelected.findIndex((contactSelected) => contactSelected.id === contact.id) !== -1 ? "bg-slate-100" : ""}`}
@@ -123,7 +161,7 @@ export default function ContactsSection() {
                 </div>
               </div>
             </div>
-          ))}
+          ))} */}
         </div>
       </div>
     </div>
