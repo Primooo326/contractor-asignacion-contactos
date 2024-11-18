@@ -29,17 +29,15 @@ export default function Page() {
         hasNextPage: false
     });
 
-    const full_name = watch("full_name", "");
     const first_name = watch("first_name", "");
     const last_name = watch("last_name", "");
     const email = watch("email", "");
 
     useEffect(() => {
-        setButtonDisabled(full_name.length < 4);
-        setButtonDisabled(first_name.length < 4);
-        setButtonDisabled(last_name.length < 4);
-        setButtonDisabled(email.length < 4);
-    }, [full_name, first_name, last_name, email]);
+        setButtonDisabled(
+            first_name.length < 4 || last_name.length < 4 || email.length < 4
+        );
+    }, [first_name, last_name, email]);
 
     const fetchData = async (page: number = 1, take: number = 5) => {
         setLoading(true);
@@ -65,7 +63,7 @@ export default function Page() {
     const onSubmit = async (data: any) => {
         setButtonDisabled(true);
         try {
-            if (userToEdit?.description) {
+            if (userToEdit?.first_name) {
                 const response = await updateUser(data, userToEdit.id);
                 if (response) {
                     fetchData();
@@ -74,10 +72,12 @@ export default function Page() {
                 }
             } else {
                 const response = await createUser(data);
-                if (response) {
+                if (response.statusCode == 201) {
                     fetchData();
                     setUserToEdit(null);
                     toast.success("Usuario creado correctamente");
+                } else {
+                    toast.error(response.message);
                 }
             }
         } catch (error: any) {
@@ -107,7 +107,9 @@ export default function Page() {
 
     const handleCreate = () => {
         setUserToEdit({
-            description: ""
+            first_name: "",
+            last_name: "",
+            email: ""
         });
     };
 
@@ -153,21 +155,29 @@ export default function Page() {
                     ) : (
                         <div className="table">
                             <div className="table-row table-header">
-                                <div className="table-cell">Nombre Completo</div>
-                                <div className="table-cell">Primer Nombre</div>
-                                <div className="table-cell">Apellido</div>
-                                <div className="table-cell">Correo</div>
-                                <div className="table-cell">Acciones</div>
+                                <div className="table-cell cell-full-name">Nombre Completo</div>
+                                <div className="table-cell cell-first-name">Primer Nombre</div>
+                                <div className="table-cell cell-last-name">Apellido</div>
+                                <div className="table-cell cell-email">Correo</div>
+                                <div className="table-cell cell-admin">Administrador</div>
+                                <div className="table-cell cell-actions">Acciones</div>
                             </div>
                             {data.map((user) => (
                                 <div key={user.id} className="table-row">
-                                    <div className="table-cell">{user.full_name}</div>
-                                    <div className="table-cell">{user.first_name}</div>
-                                    <div className="table-cell">{user.last_name}</div>
-                                    <div className="table-cell">{user.email}</div>
-                                    <div className="table-cell">
+                                    <div className="table-cell cell-full-name">{user.full_name}</div>
+                                    <div className="table-cell cell-first-name">{user.first_name}</div>
+                                    <div className="table-cell cell-last-name">{user.last_name}</div>
+                                    <div className="table-cell cell-email">{user.email}</div>
+                                    <div className="table-cell cell-admin">
+                                        {user.is_admin ? (
+                                            <DynamicIcon icon="flat-color-icons:ok" className="text-3xl" />
+                                        ) : (
+                                            <DynamicIcon icon="mdi:cross-circle" className="text-3xl" />
+                                        )}
+                                    </div>
+                                    <div className="table-cell cell-actions">
                                         <button className="btn btn-warning btn-sm" onClick={() => setUserToEdit(user)}>Editar</button>
-                                        <button className="btn btn-error btn-sm" onClick={() => setUserToDelete(user)}>Eliminar</button>
+                                        <button className="btn btn-error btn-sm ml-2" onClick={() => setUserToDelete(user)}>Eliminar</button>
                                     </div>
                                 </div>
                             ))}
@@ -202,7 +212,7 @@ export default function Page() {
             <Modal id="Usuario" className="rounded-xl w-[900px]" isOpen={userToEdit} onClose={() => { setUserToEdit(null) }}>
                 <div className='modal-header flex justify-between items-center border-b w-full px-10' >
                     <h1 className='text-2xl font-bold'>
-                        {userToEdit?.description ? "Editar Usuario" : "Nueva Usuario"}
+                        {userToEdit?.first_name ? "Editar Usuario" : "Nuevo Usuario"}
                     </h1>
                     <button onClick={() => setUserToEdit(null)}>
                         <FaXmark />
@@ -210,13 +220,40 @@ export default function Page() {
                 </div>
                 <div className='p-5'>
                     <form className='w-full space-y-4'>
-                        <div className="flex flex-col gap-1 w-full">
-                            <label className='label'>Descripción</label>
-                            <textarea
-                                className='textarea textarea-bordered w-full'
-                                {...register('description', { required: true, minLength: 3 })}
-                                rows={4}
+                        <div className="flex flex-col gap-1">
+                            <label className='label'>Primer Nombre</label>
+                            <input
+                                type="text"
+                                className='input input-bordered w-full'
+                                {...register('first_name', { required: true, minLength: 3 })}
                             />
+                        </div>
+                        <div className="flex flex-col gap-1">
+                            <label className='label'>Apellido</label>
+                            <input
+                                type="text"
+                                className='input input-bordered w-full'
+                                {...register('last_name', { required: true, minLength: 3 })}
+                            />
+                        </div>
+                        <div className="flex flex-col gap-1">
+                            <label className='label'>Correo</label>
+                            <input
+                                type="email"
+                                className='input input-bordered w-full'
+                                {...register('email', { required: true, minLength: 3 })}
+                            />
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <label className='label'>¿Es administrador?</label>
+                            <label className="switch">
+                                <input
+                                    type="checkbox"
+                                    className="checkbox"
+                                    {...register('is_admin')}
+                                />
+                                <span className="slider"></span>
+                            </label>
                         </div>
                         <div className='flex justify-end gap-3'>
                             <button className='btn btn-error t-white' onClick={() => setUserToEdit(null)}>Cancelar</button>
