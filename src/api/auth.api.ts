@@ -4,7 +4,7 @@ import { fetchApiBase } from "./instances";
 
 export async function login(email: string, password: string): Promise<IBodyLogin> {
     try {
-        const response = await fetchApiBase.post(`/auth/login`, { email, password });
+        const response = await fetchApiBase.post(`/leads/auth/login`, { email, password });
         return response; 
     } catch (error: any) {
         if (error.response && error.response.data && error.response.data.message) {
@@ -16,5 +16,5 @@ export async function login(email: string, password: string): Promise<IBodyLogin
 }
 
 export async function changePassword(newPassword: string, repeatPassword: string): Promise<IBodyResetPass> {
-    return fetchApiBase.post(`/user/changePassword`, { newPassword, repeatPassword });
+    return fetchApiBase.post(`/leads/users/changePassword`, { newPassword, repeatPassword });
 }
