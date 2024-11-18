@@ -6,6 +6,7 @@ export interface IResponseApi<T> {
     total: number;
     page: number;
     lastPage: number;
+    itemCount: number;
   };
 }
 
@@ -24,4 +25,5 @@ export interface IResponseAuth<T> {
 export interface IParamsRequest {
   page?: number;
   limit?: number;
+  take?: number;
 }
