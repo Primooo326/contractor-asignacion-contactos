@@ -119,3 +119,9 @@ interface IContactResponse {
     contact: IContact;
     traceId: string;
 }
+interface IContactAssingResponse {
+    succeded:boolean;
+    contacts: IContactSearched[];
+    meta: IMeta;
+    traceId: string;
+}
