@@ -78,14 +78,14 @@ export default function Page() {
                                 <div className="table-cell cell-email">Fecha Asignación</div>
                             </div>
                             {data.map((log) => (
-                                <div key={log.id} className="table-row">
-                                    <div className="table-cell cell-full-name-1">{log.full_name}</div>
+                                <div key={log.id_contact} className="table-row">
+                                    <div className="table-cell cell-full-name-1">{log.full_name_user}</div>
                                     <div className="table-cell cell-full-name-3">{log.full_name_contact}</div>
                                     <div className="table-cell cell-email-1">{log.email_contact}</div>
                                     <div className="table-cell cell-email">{log.phone_contact}</div>
-                                    <div className="table-cell cell-full-name-2">{log.email_assignment}</div>
+                                    <div className="table-cell cell-full-name-2">{log.email_assignment_contact}</div>
                                     <div className="table-cell cell-email">
-                                        {new Date(log.assignment_date).toLocaleDateString("es-ES", {
+                                        {new Date(log.assignment_date_contact).toLocaleDateString("es-ES", {
                                             day: "2-digit",
                                             month: "2-digit",
                                             year: "numeric"
