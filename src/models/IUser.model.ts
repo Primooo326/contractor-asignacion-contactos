@@ -10,7 +10,7 @@ export interface IUser {
     first_name: string;
     last_name: string;
     email: string;
-    is_admin: boolean;
+    is_admin: 1 | 0;
 }
 
 export interface IBodyLogin {

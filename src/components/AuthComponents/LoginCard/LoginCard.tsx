@@ -7,12 +7,15 @@ import { DynamicIcon } from "@/components/DynamicIcon";
 import { toast } from "react-toastify";
 import { login } from "@/api/auth.api";
 import 'react-toastify/dist/ReactToastify.css';
+import { useSystemStore } from "@hooks/system.hook";
 
 export default function LoginCard({ setCargando, setReset }: { setCargando: (b: boolean) => void, setReset: (b: boolean) => void }) {
     const router = useRouter();
     const [userForm, setUserForm] = useState("");
     const [password, setPassword] = useState("");
     const [mostrarPassword, setMostrarPassword] = useState(false);
+
+    const { setIsAdmin } = useSystemStore();
 
     const handleUsuarioChange = (event: any) => {
         setUserForm(event.target.value);
@@ -44,6 +47,11 @@ export default function LoginCard({ setCargando, setReset }: { setCargando: (b: 
                 setCargando(false);
                 return;
             }
+
+            if (res.user.is_admin === 1) {
+                setIsAdmin(true);
+            }
+
             Cookies.set("token", res.token);
             if (res.resetPass) {
                 setReset(true);

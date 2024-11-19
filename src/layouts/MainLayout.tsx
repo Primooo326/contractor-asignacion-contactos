@@ -11,6 +11,7 @@ interface LayoutProps {
 
 export default function MainLayout({ children }: LayoutProps) {
     return (
+
         <main className={`mainLayout`} data-theme="light">
             <Navbar />
             {children}

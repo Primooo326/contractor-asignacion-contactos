@@ -123,7 +123,7 @@ export default function ContactsSection() {
         <h1 className="text-sm">
           {loading
             ? "Buscando..."
-            : `${contactsList.length} contactos encontrados`}
+            : `${contactsSelected.length} contactos encontrados`}
         </h1>
         <div className="space-y-2 overflow-y-auto scrollbar-custom pb-10 listContactsContainer">
           <div className='bodyChat overflow-y-auto scrollbar-custom p-4'>
@@ -140,36 +140,12 @@ export default function ContactsSection() {
                     </p>
                   </div>
                   <button onClick={() => handleSelectContact(contact)}>
-                    {/* <FaXmark /> */}
+                    <FaXmark />
                   </button>
                 </div>
               ))}
             </div>
           </div>
-          {/* {contactsList.map((contact, index) => (
-            <div
-              key={index}
-              className={`flex justify-between items-center w-full hover:bg-gray-100 p-4 rounded-lg ${contactsSelected.findIndex((contactSelected) => contactSelected.id === contact.id) !== -1 ? "bg-slate-100" : ""}`}
-              onClick={() => selectContact(contact)}
-            >
-              <div className="flex items-center gap-2 w-full">
-                <img
-                  src={`https://ui-avatars.com/api/?name=${contact.contactName}&background=random`}
-                  alt="contractor"
-                  className="rounded-full"
-                  style={{ width: "40px" }}
-                />
-                <div>
-                  <h1 className="font-bold text-sm">
-                    {contact.contactName}
-                  </h1>
-                  <p className="text-sm font-light line-clamp-1">
-                    {contact.email}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))} */}
         </div>
       </div>
     </div>

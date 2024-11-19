@@ -64,27 +64,3 @@ export const getRandomColorBg = () => {
     return colors[Math.floor(Math.random() * colors.length)];
 }
 
-export function timeAgo(timestamp: number): string {
-    const now = Date.now();
-    const seconds = Math.floor((now - timestamp) / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-
-    // Formato de fecha
-    const date = new Date(timestamp);
-    const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: 'short' };
-    const formattedDate = date.toLocaleDateString('en-US', options).replace(',', '');
-
-    if (seconds < 60) {
-        return `${seconds} sec ago`;
-    } else if (minutes < 60) {
-        return `${minutes} min ago`;
-    } else if (hours < 24) {
-        return `${hours} h ago`;
-    } else if (days < 7) {
-        return `${days} d ago`;
-    } else {
-        return formattedDate; // Devuelve la fecha si han pasado más de 7 días
-    }
-}

@@ -21,7 +21,7 @@ const instance = (api: "contractor" | "base", headers?: any) => {
             "version": "2021-07-28",
         },
     });
-    
+
     instancia.interceptors.request.use(
         (config) => {
             let tokenContractor = CONTRACTOR_KEY;
@@ -29,9 +29,9 @@ const instance = (api: "contractor" | "base", headers?: any) => {
             if (Cookies.get('token')) {
                 token = String(Cookies.get('token'));
             }
-            if (api == 'contractor'){
+            if (api == 'contractor') {
                 config.headers.Authorization = tokenContractor ? `Bearer ${tokenContractor}` : null;
-            }else if (token) {
+            } else if (token) {
                 config.headers.Authorization = token ? `Bearer ${token}` : null;
             }
             return config;
@@ -47,7 +47,6 @@ const instance = (api: "contractor" | "base", headers?: any) => {
         (error) => {
             console.error("error response::::", error);
             if (error.response && Number(error.response.status) === 401) {
-                // window.location.href = '/auth';
             } else if (error.code === 'ERR_NETWORK') {
                 toast.error('Error de red, verifique su conexión a internet.');
             } else if (error.response.data.message) {
@@ -71,7 +70,7 @@ const responseBody = (response: AxiosResponse) =>
 export const fetchApiContractor = {
     get: (url: string, responseType?: ResponseType) =>
         instance("contractor")
-            .get(url, { 
+            .get(url, {
                 responseType,
             })
             .then(responseBody),

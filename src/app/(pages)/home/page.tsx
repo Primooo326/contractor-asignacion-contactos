@@ -7,5 +7,6 @@ export default function page() {
             <ContactsSection />
             <AsociadoSection />
         </div>
+
     )
 }

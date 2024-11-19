@@ -2,12 +2,12 @@ import React from 'react'
 import { DynamicIcon } from './DynamicIcon'
 import Cookies from "js-cookie";
 import { usePathname, useRouter } from 'next/navigation';
-import { toast } from 'react-toastify';
+import { useSystemStore } from '@hooks/system.hook';
 
 export default function Navbar() {
     const router = useRouter();
     const pathname = usePathname();
-
+    const { isAdmin } = useSystemStore();
     const [isOnHomePage, setIsOnHomePage] = React.useState(pathname === '/');
 
     const handleLogout = () => {
@@ -45,9 +45,20 @@ export default function Navbar() {
             <div className="navbar-center">
 
                 {
-                    isOnHomePage ? <button className="btn btn-primary" onClick={handleUsers}>Usuarios <DynamicIcon icon="mi:user" /></button> :
-                        <button className="btn btn-primary" onClick={handleHome} >Home <DynamicIcon icon="mi:home" /></button>
+                    isAdmin && (
+                        <>
+                            {
+                                isOnHomePage ?
+
+                                    <button className="btn btn-primary" onClick={handleUsers}>Usuarios <DynamicIcon icon="mi:user" /></button>
+                                    :
+                                    <button className="btn btn-primary" onClick={handleHome} >Home <DynamicIcon icon="mi:home" /></button>
+
+                            }
+                        </>
+                    )
                 }
+
             </div>
 
             <div className="navbar-end">
