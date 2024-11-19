@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { DynamicIcon } from "@components/DynamicIcon";
 import React, { useRef } from "react";
 import { useSystemStore } from "@hooks/system.hook";
+import { logAssignment } from "@api/assinged";
 
 export default function AsociadoSection() {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -43,6 +44,17 @@ export default function AsociadoSection() {
                 contact.contactId,
                 responseUser.users[0].id
               );
+              await logAssignment(
+                contact.contactId,
+                contact.fullName,
+                contact.contactName,
+                contact.contactName,
+                contact.email,
+                contact.phone,
+                responseUser.users[0].id,
+                responseUser.users[0].email
+            );
+    
             });
             toast.success(
               `Se asignó ${contactsSelected.length} contacto${contactsSelected.length > 1 ? "s" : ""
