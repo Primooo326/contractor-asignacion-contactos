@@ -1,8 +1,9 @@
+"use client"
+import { useEffect, useState } from 'react'
 import Table from '@components/Table'
 import { ITableColumn } from '@models/ISystem.model';
 import { IUser } from '@models/IUser.model';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react'
 import { createUser, deleteUser, getUsers, updateUser } from '@api/users';
 import { toast } from 'react-toastify';
 import { useForm } from 'react-hook-form';
@@ -134,7 +135,55 @@ export default function page() {
     }, [userToEdit]);
 
     const columnas: ITableColumn<IUser>[] = [
-
+        {
+            name: 'Nombre Completo',
+            cell: (row: IUser) => row.full_name,
+            selector: (row: IUser) => row.full_name,
+            sortable: true
+        },
+        {
+            name: 'Primer Nombre',
+            cell: (row: IUser) => row.first_name,
+            selector: (row: IUser) => row.first_name,
+            sortable: true
+        },
+        {
+            name: 'Apellido',
+            cell: (row: IUser) => row.last_name,
+            selector: (row: IUser) => row.last_name,
+            sortable: true
+        },
+        {
+            name: 'Correo',
+            cell: (row: IUser) => row.email,
+            selector: (row: IUser) => row.email,
+            sortable: true
+        },
+        {
+            name: 'Administrador',
+            cell: (row: IUser) => row.is_admin,
+            selector: (row: IUser) => row.is_admin,
+            sortable: true
+        },
+        {
+            name: 'Acciones',
+            cell: (row: IUser) => {
+                return (
+                    <div className='flex gap-5'>
+                        <button className='btn btn-warning btn-sm' onClick={() => setUserToEdit(row)}>Editar</button>
+                        <button className='btn btn-error btn-sm ml-2' onClick={() => setUserToDelete(row)}>Eliminar</button>
+                    </div>
+                )
+            },
+            selector: (row: IUser) => {
+                return (
+                    <div className='flex gap-5'>
+                        <button className='btn btn-warning btn-sm' onClick={() => setUserToEdit(row)}>Editar</button>
+                        <button className='btn btn-error btn-sm ml-2' onClick={() => setUserToDelete(row)}>Eliminar</button>
+                    </div>
+                )
+            }
+        }
     ]
 
     return (
