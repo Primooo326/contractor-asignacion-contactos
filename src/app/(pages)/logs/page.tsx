@@ -1,19 +1,19 @@
 "use client"
-
-import React, { useEffect, useState } from 'react';
-import "./styles.scss";
-import { toast } from 'react-toastify';
-import { DynamicIcon } from '@/components/DynamicIcon';
 import { getLogs } from '@api/logs.api';
+import Table from '@components/Table';
 import { ILog } from '@models/ILog.model';
+import { ITableColumn } from '@models/ISystem.model';
+import React, { useEffect, useState } from 'react'
+import { toast } from 'react-toastify';
 
-export default function Page() {
+export default function page() {
+
     const [data, setData] = useState<ILog[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [paginationOptions, setPaginationOptions] = useState({
         currentItems: data,
         page: 1,
-        limit: 5,
+        take: 5,
         itemCount: data.length,
         pageCount: 1,
         hasPreviousPage: false,
@@ -47,7 +47,7 @@ export default function Page() {
 
     const onChangePage = (page: number) => {
         setPaginationOptions({ ...paginationOptions, page });
-        fetchData(page, paginationOptions.limit);
+        fetchData(page, paginationOptions.take);
     };
 
     const onChangePerPage = (newPerPage: number) => {
@@ -58,70 +58,55 @@ export default function Page() {
         fetchData(paginationOptions.page, newPerPage === -1 ? paginationOptions.itemCount : newPerPage);
     };
 
-    return (
-        <>
-            <div className="page-container">
-                <div className="table-container">
-                    <div className="table-header">
-                        <h1>Auditoria</h1>
-                    </div>
-                    {loading ? (
-                        <div className="loading-spinner">Cargando datos...</div>
-                    ) : (
-                        <div className="table">
-                            <div className="table-row table-header">
-                                <div className="table-cell cell-full-name-1-h">Usuario en Sesión</div>
-                                <div className="table-cell cell-full-name-3">Nombre Contacto</div>
-                                <div className="table-cell cell-email-1">Correo Contacto</div>
-                                <div className="table-cell cell-email">Número Contacto</div>
-                                <div className="table-cell cell-full-name-2-h">Usuario Asignado</div>
-                                <div className="table-cell cell-email">Fecha Asignación</div>
-                            </div>
-                            {data.map((log) => (
-                                <div key={log.id} className="table-row">
-                                    <div className="table-cell cell-full-name-1">{log.full_name}</div>
-                                    <div className="table-cell cell-full-name-3">{log.full_name_contact}</div>
-                                    <div className="table-cell cell-email-1">{log.email_contact}</div>
-                                    <div className="table-cell cell-email">{log.phone_contact}</div>
-                                    <div className="table-cell cell-full-name-2">{log.email_assignment}</div>
-                                    <div className="table-cell cell-email">
-                                        {new Date(log.assignment_date).toLocaleDateString("es-ES", {
-                                            day: "2-digit",
-                                            month: "2-digit",
-                                            year: "numeric"
-                                        })}
-                                    </div>
-                                </div>
-                            ))}
+    const columnas: ITableColumn<ILog>[] = [
+        {
+            name: 'Usuario en Sesión',
+            cell: (row: ILog) => row.full_name,
+            selector: (row: ILog) => row.full_name,
+            sortable: true
+        },
+        {
+            name: 'Nombre Contacto',
+            cell: (row: ILog) => row.full_name_contact,
+            selector: (row: ILog) => row.full_name_contact,
+            sortable: true
+        },
+        {
+            name: 'Correo Contacto',
+            cell: (row: ILog) => row.email_contact,
+            selector: (row: ILog) => row.email_contact,
+            sortable: true
+        },
+        {
+            name: 'Número Contacto',
+            cell: (row: ILog) => row.phone_contact,
+            selector: (row: ILog) => row.phone_contact,
+            sortable: true
+        },
+        {
+            name: 'Usuario Asignado',
+            cell: (row: ILog) => row.email_assignment,
+            selector: (row: ILog) => row.email_assignment,
+            sortable: true
+        },
+        {
+            name: 'Fecha Asignación',
+            cell: (row: ILog) => row.assignment_date,
+            selector: (row: ILog) => row.assignment_date,
+            sortable: true
+        }
+    ]
 
-                        </div>
-                    )}
-                    <div className="pagination-container">
-                        <select onChange={(e) => onChangePerPage(Number(e.target.value))} value={paginationOptions.limit}>
-                            <option value={5}>Items por página: 5</option>
-                            <option value={10}>Items por página: 10</option>
-                            <option value={15}>Items por página: 15</option>
-                            <option value={20}>Items por página: 20</option>
-                            <option value={-1}>Todos los items</option>
-                        </select>
-                        <div>
-                            Página {paginationOptions.page} de {paginationOptions.page}
-                        </div>
-                        <button className="btn btn-circle btn-ghost btn-pagination" onClick={() => onChangePage(1)} disabled={!paginationOptions.hasPreviousPage}>
-                            <DynamicIcon icon='mdi:chevron-double-left' className='text-3xl' />
-                        </button>
-                        <button className="btn btn-circle btn-ghost btn-pagination" onClick={() => onChangePage(paginationOptions.page - 1)} disabled={!paginationOptions.hasPreviousPage}>
-                            <DynamicIcon icon='ci:chevron-left-md' className='text-3xl' />
-                        </button>
-                        <button className="btn btn-circle btn-ghost btn-pagination" onClick={() => onChangePage(paginationOptions.page + 1)} disabled={!paginationOptions.hasNextPage}>
-                            <DynamicIcon icon='ci:chevron-right-md' className='text-3xl' />
-                        </button>
-                        <button className="btn btn-circle btn-ghost btn-pagination" onClick={() => onChangePage(paginationOptions.pageCount)} disabled={!paginationOptions.hasNextPage}>
-                            <DynamicIcon icon='mdi:chevron-double-right' className='text-3xl' />
-                        </button>
-                    </div>
-                </div>
+
+    return (
+        <div className='w-full h-full p-8'>
+            <div className='flex justify-between items-center mb-4'>
+                <h1 className='text-3xl font-bold'>Clientes</h1>
+
             </div>
-        </>
-    );
+            <Table data={data} columns={columnas} selectableRows={false}
+                paginationOptions={paginationOptions} onChangePage={onChangePage} onChangePerPage={onChangePerPage} progressPending={loading} />
+
+        </div>
+    )
 }

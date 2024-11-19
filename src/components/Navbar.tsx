@@ -1,14 +1,14 @@
-import React from 'react'
 import { DynamicIcon } from './DynamicIcon'
 import Cookies from "js-cookie";
 import { usePathname, useRouter } from 'next/navigation';
 import { useSystemStore } from '@hooks/system.hook';
+import { useState, useEffect } from 'react';
 
 export default function Navbar() {
     const router = useRouter();
     const pathname = usePathname();
     const { isAdmin } = useSystemStore();
-    const [isOnHomePage, setIsOnHomePage] = React.useState(pathname === '/');
+    const [isOnHomePage, setIsOnHomePage] = useState(pathname === '/');
 
     const handleLogout = () => {
         console.log('logout')
@@ -26,13 +26,22 @@ export default function Navbar() {
         router.push('/home')
     }
 
-    React.useEffect(() => {
+    const handleLogs = () => {
+        console.log('logs')
+        router.push('/logs')
+    }
+
+    useEffect(() => {
         if (pathname === '/home') {
             setIsOnHomePage(true);
         } else {
             setIsOnHomePage(false);
         }
     }, [pathname]);
+
+    useEffect(() => {
+        console.log(isAdmin);
+    }, [isAdmin]);
 
     return (
         <div className="navbar border-b p-4">
@@ -42,19 +51,16 @@ export default function Navbar() {
 
             </div>
 
-            <div className="navbar-center">
+            <div className="navbar-center flex gap-5">
 
                 {
                     isAdmin && (
                         <>
-                            {
-                                isOnHomePage ?
 
-                                    <button className="btn btn-primary" onClick={handleUsers}>Usuarios <DynamicIcon icon="mi:user" /></button>
-                                    :
-                                    <button className="btn btn-primary" onClick={handleHome} >Home <DynamicIcon icon="mi:home" /></button>
+                            <button className="btn btn-primary" disabled={pathname === '/home'} onClick={handleHome}> <DynamicIcon icon="mi:home" className="size-6" /> Home</button>
+                            <button className="btn btn-primary" disabled={pathname === '/users'} onClick={handleUsers}> <DynamicIcon icon="mi:user" className="size-6" /> Usuarios</button>
+                            <button className="btn btn-primary" disabled={pathname === '/logs'} onClick={handleLogs}> <DynamicIcon icon="mingcute:paper-line" className="size-6" />Logs</button>
 
-                            }
                         </>
                     )
                 }

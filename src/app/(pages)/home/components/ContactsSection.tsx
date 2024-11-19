@@ -89,7 +89,6 @@ export default function ContactsSection() {
     const token = Cookies.get("token") || null;
     if (token) {
       const decoded = decodeToken(token);
-      console.log(decoded);
       if (!decoded.isAdmin) {
         setAssignedTo(decoded.idUser_High_Level);
       }
