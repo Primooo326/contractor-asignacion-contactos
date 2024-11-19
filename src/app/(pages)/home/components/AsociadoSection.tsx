@@ -15,7 +15,7 @@ export default function AsociadoSection() {
 
     };
     return (
-        <div className="p-4 space-y-6 h-full overflow-hidden mb-6">
+        <div className="p-4 space-y-6 h-full overflow-hidden mb-6 border-t">
 
             <div className="flex justify-between items-center">
                 <label className="input input-bordered input-sm flex items-center gap-2 w-full">
