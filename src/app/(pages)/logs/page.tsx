@@ -103,8 +103,15 @@ export default function page() {
             <div className='flex justify-between items-center mb-4'>
                 <h1 className='text-3xl font-bold'>Clientes</h1>
             </div>
-            <Table data={data} columns={columnas} selectableRows={false}
-                paginationOptions={paginationOptions} onChangePage={onChangePage} onChangePerPage={onChangePerPage} progressPending={loading} />
+            <Table
+                data={data}
+                columns={columnas}
+                selectableRows={false}
+                paginationOptions={paginationOptions}
+                onChangePage={onChangePage}
+                onChangePerPage={onChangePerPage}
+                progressPending={loading}
+            />
 
         </div>
     )

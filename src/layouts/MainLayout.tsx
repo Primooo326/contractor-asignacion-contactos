@@ -21,9 +21,9 @@ export default function MainLayout({ children }: LayoutProps) {
         const data: any = await verifyJWT(token!);
         if (data) {
             if (data.isAdmin === 1) {
+                setIsAdmin(true);
             }
         }
-        setIsAdmin(true);
     };
 
     useEffect(() => {
