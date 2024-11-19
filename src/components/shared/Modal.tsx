@@ -46,7 +46,7 @@ export default function Modal({
         <>
             {isOpen && (
                 <section id={id} className="modale" onClick={handleClickOut}>
-                    <div className={`modal-content ${className}`}>{children}</div>
+                    <div className={`modal-content bg-base-200 ${className} `}>{children}</div>
                 </section>
             )}
         </>

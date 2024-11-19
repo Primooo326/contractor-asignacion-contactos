@@ -188,10 +188,10 @@ export default function page() {
 
     return (
         <div className='w-full h-full p-8'>
-            <div className='flex justify-between items-center'>
+            <div className='flex justify-between items-center mb-4'>
                 <h1 className='text-3xl font-bold'>Clientes</h1>
                 <div className='flex gap-5'>
-                    <button className='btn btn-success' onClick={() => router.push('/configuracion/clientes/crear')}>Registrar nuevo cliente</button>
+                    <button className='btn btn-success' onClick={handleCreate}>Nuevo usuario</button>
                 </div>
             </div>
             <Table data={data} columns={columnas} selectableRows={false}
