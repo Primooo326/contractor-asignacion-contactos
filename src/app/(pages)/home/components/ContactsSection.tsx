@@ -101,7 +101,7 @@ export default function ContactsSection() {
 
   return (
     <div className="contactsSection w-full border-r border-base-300">
-      <div className="p-4 space-y-6 h-full overflow-hidden mb-6 ">
+      <div className="p-4 space-y-6 h-full overflow-y-auto mb-6 ">
         <div className="flex justify-between items-center w-[300px] space-x-4">
           <label className="input input-bordered input-sm flex items-center gap-2 w-full">
             <DynamicIcon icon="fa-solid:search" className="" />
