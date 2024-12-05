@@ -107,10 +107,9 @@ export default function AsociadoSection() {
   }
 
   const handleSelectAsociado = (asociadoId: string) => {
-    const asociado = asociados.find((asociado) => asociado.id === asociadoId);
-    console.log(asociado);
-
-  }
+    const asociado = asociados.find((asociado) => asociado.id === asociadoId) || null;
+    setAsociadoSelected(asociado);
+  };
 
   useEffect(() => {
     fetchAsociados();
