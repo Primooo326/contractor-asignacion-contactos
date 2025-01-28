@@ -4,6 +4,8 @@ import { toast } from "react-toastify";
 import Cookies from "js-cookie"
 import { IParamsRequest } from "@/models/IResponseApi.model";
 
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 const instance = (api: "contractor" | "base", headers?: any) => {
     let baseURL: string = 'contractor';
     if (api === 'contractor') {
@@ -47,7 +49,11 @@ const instance = (api: "contractor" | "base", headers?: any) => {
         (error) => {
             console.error("error response::::", error);
             if (error.response && Number(error.response.status) === 401) {
-            } else if (error.code === 'ERR_NETWORK') {
+
+            } else if (Number(error.response.status) === 429) {
+                console.log(error);
+            }
+            else if (error.code === 'ERR_NETWORK') {
                 toast.error('Error de red, verifique su conexión a internet.');
             } else if (error.response.data.message) {
 
@@ -64,38 +70,131 @@ const instance = (api: "contractor" | "base", headers?: any) => {
     return instancia;
 }
 
-const responseBody = (response: AxiosResponse) =>
-    response ? response.data : response;
+const responseBody = (response: AxiosResponse) => response ? response.data : response;
+
+const handleRequest = async (
+    requestFn: () => Promise<any>,
+    maxRetries: number = 3
+) => {
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+            return await requestFn();
+        } catch (error: any) {
+            if (error.response?.status === 429) {
+                const retryAfter = parseInt(error.response.headers['x-ratelimit-interval-milliseconds']) || 5000;
+                // const mensaje = `Intento ${attempt}/${maxRetries}: Rate limit alcanzado. Esperando ${retryAfter}ms antes de reintentar...`
+                const mensaje = `Espere ${retryAfter / 1000} segundos, se intentara de nuevo automáticamente.`
+                toast.error(mensaje)
+                console.log(mensaje);
+                if (attempt < maxRetries) {
+                    await delay(retryAfter);
+                    continue;
+                }
+
+            } else {
+
+                throw error;
+            }
+        }
+    }
+};
 
 export const fetchApiContractor = {
-    get: (url: string, responseType?: ResponseType) =>
-        instance("contractor")
-            .get(url, {
-                responseType,
-            })
-            .then(responseBody),
-    post: (url: string, body?: any, headers?: any) =>
-        instance("contractor", headers).post(url, body).then(responseBody),
-    put: (url: string, body?: any) => instance("contractor").put(url, body).then(responseBody),
-    patch: (url: string, body?: any) =>
-        instance("contractor").patch(url, body).then(responseBody),
-    delete: (url: string) => instance("contractor").delete(url).then(responseBody),
-    downloadFile: (url: string, body: any, _instance: "contractor" = "contractor") => instance(_instance).post(url, body, { responseType: 'blob' }).then(responseBody),
-    downloadFileGet: (url: string, _instance: "contractor" = "contractor") => instance(_instance).get(url, { responseType: 'blob' }).then(responseBody),
+    get: (url: string, responseType?: ResponseType, maxRetries?: number) =>
+        handleRequest(
+            () => instance("contractor")
+                .get(url, { responseType })
+                .then(responseBody),
+            maxRetries
+        ),
+
+    post: (url: string, body?: any, headers?: any, maxRetries?: number) =>
+        handleRequest(
+            () => instance("contractor", headers)
+                .post(url, body)
+                .then(responseBody),
+            maxRetries
+        ),
+
+    put: (url: string, body?: any, maxRetries?: number) =>
+        handleRequest(
+            () => instance("contractor")
+                .put(url, body)
+                .then(responseBody),
+            maxRetries
+        ),
+
+    patch: (url: string, body?: any, maxRetries?: number) =>
+        handleRequest(
+            () => instance("contractor")
+                .patch(url, body)
+                .then(responseBody),
+            maxRetries
+        ),
+
+    delete: (url: string, maxRetries?: number) =>
+        handleRequest(
+            () => instance("contractor")
+                .delete(url)
+                .then(responseBody),
+            maxRetries
+        ),
+
+    downloadFile: (url: string, body: any, _instance: "contractor" = "contractor", maxRetries?: number) =>
+        handleRequest(
+            () => instance(_instance)
+                .post(url, body, { responseType: 'blob' })
+                .then(responseBody),
+            maxRetries
+        ),
+
+    downloadFileGet: (url: string, _instance: "contractor" = "contractor", maxRetries?: number) =>
+        handleRequest(
+            () => instance(_instance)
+                .get(url, { responseType: 'blob' })
+                .then(responseBody),
+            maxRetries
+        ),
 };
 
 export const fetchApiBase = {
-    get: (url: string, params?: IParamsRequest, responseType?: ResponseType) =>
-        instance("base")
-            .get(url, {
-                params,
-                responseType,
-            })
-            .then(responseBody),
-    post: (url: string, body?: any) =>
-        instance("base").post(url, body).then(responseBody),
-    put: (url: string, body?: any) => instance("base").patch(url, body).then(responseBody),
-    patch: (url: string, body?: any) =>
-        instance("base").patch(url, body).then(responseBody),
-    delete: (url: string) => instance("base").delete(url).then(responseBody),
+    get: (url: string, params?: IParamsRequest, responseType?: ResponseType, maxRetries?: number) =>
+        handleRequest(
+            () => instance("base")
+                .get(url, { params, responseType })
+                .then(responseBody),
+            maxRetries
+        ),
+
+    post: (url: string, body?: any, maxRetries?: number) =>
+        handleRequest(
+            () => instance("base")
+                .post(url, body)
+                .then(responseBody),
+            maxRetries
+        ),
+
+    put: (url: string, body?: any, maxRetries?: number) =>
+        handleRequest(
+            () => instance("base")
+                .patch(url, body)
+                .then(responseBody),
+            maxRetries
+        ),
+
+    patch: (url: string, body?: any, maxRetries?: number) =>
+        handleRequest(
+            () => instance("base")
+                .patch(url, body)
+                .then(responseBody),
+            maxRetries
+        ),
+
+    delete: (url: string, maxRetries?: number) =>
+        handleRequest(
+            () => instance("base")
+                .delete(url)
+                .then(responseBody),
+            maxRetries
+        ),
 };

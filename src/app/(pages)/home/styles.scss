@@ -10,7 +10,7 @@
     height: 100dvh;
 
     display: grid;
-    grid-template-rows: auto var(--section3);
+    grid-template-rows: auto 200px;
 
     .contactsSection {
         overflow: hidden;

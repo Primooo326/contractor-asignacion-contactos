@@ -45,9 +45,7 @@ export default function ContactsSection() {
       setLoading(true);
 
       for (let i = 0; i < queryes.length; i++) {
-        console.log(queryes[i]);
         getConversations(null, queryes[i]).then((data) => {
-          console.log(data);
           setContactsList((prevContacts) => {
             if (
               data?.conversations.length === 1 &&
@@ -130,7 +128,7 @@ export default function ContactsSection() {
             <div className='flex flex-wrap gap-4 w-full'>
 
               {contactsSelected.map((contact, index) => (
-                <div key={index} className='p-1 pe-4 rounded-full w-fit border flex gap-2 hover:scale-105 transition-all duration-300 hover:bg-gray-100'>
+                <div key={index} className='p-1 pe-4 rounded-full w-fit border flex gap-2 hover:scale-105 transition-all duration-300 hover:bg-gray-100 hover:text-black'>
                   <img src={`https://ui-avatars.com/api/?name=${contact!.contactName?.replaceAll(" ", "+")}&background=random`} alt="contractor" className='rounded-full' style={{ width: '40px' }} />
                   <div >
                     <h1 className='font-bold text-sm'>{contact!.contactName}</h1>
